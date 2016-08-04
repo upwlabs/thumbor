@@ -21,7 +21,8 @@ class Metrics(BaseMetrics):
         over and over
         """
         if not hasattr(cls, "_client"):
-            cls._client = statsd.StatsClient(config.STATSD_HOST, config.STATSD_PORT, config.STATSD_PREFIX)
+            #cls._client = statsd.StatsClient(config.STATSD_HOST, config.STATSD_PORT, config.STATSD_PREFIX)
+            cls._client = None
         return cls._client
 
     def incr(self, metricname, value=1):
