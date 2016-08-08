@@ -8,7 +8,7 @@
 # http://www.opensource.org/licenses/mit-license
 # Copyright (c) 2011 globo.com thumbor@googlegroups.com
 
-import statsd
+#import statsd
 from thumbor.metrics import BaseMetrics
 
 
@@ -26,7 +26,9 @@ class Metrics(BaseMetrics):
         return cls._client
 
     def incr(self, metricname, value=1):
-        Metrics.client(self.config).incr(metricname, value)
+        # Metrics.client(self.config).incr(metricname, value)
+        pass
 
     def timing(self, metricname, value):
-        Metrics.client(self.config).timing(metricname, value)
+        # Metrics.client(self.config).timing(metricname, value)
+        pass
