@@ -8,27 +8,14 @@
 # http://www.opensource.org/licenses/mit-license
 # Copyright (c) 2011 globo.com thumbor@googlegroups.com
 
-#import statsd
+from statsd import statsd
 from thumbor.metrics import BaseMetrics
 
 
 class Metrics(BaseMetrics):
 
-    @classmethod
-    def client(cls, config):
-        """
-        Cache statsd client so it doesn't do a DNS lookup
-        over and over
-        """
-        if not hasattr(cls, "_client"):
-            #cls._client = statsd.StatsClient(config.STATSD_HOST, config.STATSD_PORT, config.STATSD_PREFIX)
-            cls._client = None
-        return cls._client
-
     def incr(self, metricname, value=1):
-        # Metrics.client(self.config).incr(metricname, value)
-        pass
+        statsd.increment(metricname, value)
 
     def timing(self, metricname, value):
-        # Metrics.client(self.config).timing(metricname, value)
-        pass
+        statsd.timing(metricname, value)
