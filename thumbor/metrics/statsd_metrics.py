@@ -15,7 +15,7 @@ from thumbor.metrics import BaseMetrics
 class Metrics(BaseMetrics):
 
     def incr(self, metricname, value=1):
-        statsd.increment(metricname, value)
+        statsd.increment('thumbor.' + metricname, value)
 
     def timing(self, metricname, value):
-        statsd.timing(metricname, value)
+        statsd.timing('thumbor.' + metricname, value)
