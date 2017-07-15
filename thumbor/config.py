@@ -295,6 +295,7 @@ Config.define(
         'thumbor.filters.strip_icc',
         'thumbor.filters.frame',
         'thumbor.filters.grayscale',
+        'thumbor.filters.fft',
         'thumbor.filters.rotate',
         'thumbor.filters.format',
         'thumbor.filters.max_bytes',
