@@ -296,6 +296,7 @@ Config.define(
         'thumbor.filters.frame',
         'thumbor.filters.grayscale',
         'thumbor.filters.fft',
+        'thumbor.filters.blind_digit_wm',
         'thumbor.filters.rotate',
         'thumbor.filters.format',
         'thumbor.filters.max_bytes',
