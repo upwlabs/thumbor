@@ -8,64 +8,7 @@
 # http://www.opensource.org/licenses/mit-license
 # Copyright (c) 2011 globo.com thumbor@googlegroups.com
 
-import random
-
-from PIL import Image
-import numpy as np
-
-from PIL import ImageDraw
-from PIL import ImageFont
-
-
-## Helper functions to rescale a frequency-image to [0, 255] and save
-remmax = lambda x: x/x.max()
-remmin = lambda x: x - np.amin(x, axis=(0,1), keepdims=True)
-touint8 = lambda x: (remmax(remmin(x))*(256-1e-4)).astype(int)
-
-def arr2im(data):
-    out = Image.new('RGB', data.shape[1::-1])
-    out.putdata(map(tuple, data.reshape(-1, 3)))
-    return out
-
-
-def encode_wm(wm):
-    x, y = range(64), range(64)
-    random.seed(2569)
-    random.shuffle(x)
-    random.shuffle(y)
-    tmp = np.zeros((256, 256, 3))
-    for i in range(64):
-        for j in range(64):
-            tmp[i][j] = wm[x[i]][y[j]]
-            tmp[64 + i][j] = wm[x[i]][y[j]]
-            tmp[i][64 + j] = wm[x[i]][y[j]]
-            tmp[64 + i][64 + j] = wm[x[i]][y[j]]
-            tmp[256 - 1 - i][256 - 1 - j] = wm[x[i]][y[j]]
-            tmp[256 - 64 - 1 - i][256 - 1 - j] = wm[x[i]][y[j]]
-            tmp[256 - 1 - i][256 - 64 - 1 - j] = wm[x[i]][y[j]]
-            tmp[256 - 64 - 1 - i][256 - 64 - 1 - j] = wm[x[i]][y[j]]
-    return tmp
-
-
-def decode_wm(ewm):
-    x, y = range(64), range(64)
-    random.seed(2569)
-    random.shuffle(x)
-    random.shuffle(y)
-    tmp = np.zeros((256, 256, 3))
-    for i in range(64):
-        for j in range(64):
-            tmp[x[i]][y[j]] = ewm[i][j]
-            tmp[64 + x[i]][y[j]] = ewm[64 + i][j]
-            tmp[x[i]][64 + y[j]] = ewm[i][64 + j]
-            tmp[64 + x[i]][64 + y[j]] = ewm[64 + i][64 + j]
-            tmp[256 - 1 - x[i]][256 - 1 - y[j]] = ewm[256 - 1 - i][256 - 1 - j]
-            tmp[256 - 64 - 1 - x[i]][256 - 1 - y[j]] = ewm[256 - 64 - 1 - i][256 - 1 - j]
-            tmp[256 - 1 - x[i]][256 - 64 - 1 - y[j]] = ewm[256 - 1 - i][256 - 64 - 1 - j]
-            tmp[256 - 64 - 1 - x[i]][256 - 64 - 1 - y[j]] = ewm[256 - 64 - 1 - i][256 - 64 - 1 - j]
-    return tmp
-
-
+from thumbor.filters.wmutils import *
 from thumbor.filters import BaseFilter, filter_method
 
 
@@ -78,13 +21,7 @@ class Filter(BaseFilter):
         bz = base_size
         freq = np.fft.fft2(engine.image)
 
-        wm_im = Image.new('RGB', (64, 64), (0, 0, 0))
-        draw = ImageDraw.Draw(wm_im)
-        font = ImageFont.truetype("Hack-Bold.ttf", 24)
-        draw.text((10, 10), wm_str[:len(wm_str) / 2], (255, 255, 255), font=font)
-        draw.text((10, 34), wm_str[len(wm_str) / 2:], (255, 255, 255), font=font)
-        encoded_wm = encode_wm(np.array(wm_im))
-        freq_wm = freq + encoded_wm / encoded_wm.max() * 1024
+        freq_wm = wm_freq(wm_str, freq)
 
         back_from_freq = np.fft.ifft2(freq_wm)
         back_from_freq = np.real(back_from_freq)
