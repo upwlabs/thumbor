@@ -30,7 +30,7 @@ def wm_freq(wm_str, freq, wm_amp):
 def gen_wm(wm_str):
     wm_im = Image.new('RGB', (W, H), (0, 0, 0))
     draw = ImageDraw.Draw(wm_im)
-    font = ImageFont.truetype("Hack-Regular.ttf", 24)
+    font = ImageFont.truetype("Hack-Regular.ttf", 36)
     for i, j in ((0, 0), (1, 3)):
         # draw.text((j * 64 + 5, i * 64 + 5), wm_str[:len(wm_str) / 2], (255, 255, 255), font=font)
         # draw.text((j * 64 + 5, i * 64 + 32 + 5), wm_str[len(wm_str) / 2:], (255, 255, 255), font=font)
