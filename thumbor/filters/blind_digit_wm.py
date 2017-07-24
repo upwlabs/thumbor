@@ -14,12 +14,13 @@ from thumbor.filters.wmutils import *
 
 class Filter(BaseFilter):
 
-    @filter_method(BaseFilter.String)
-    def bdw(self, wm_str):
+    @filter_method(BaseFilter.String, BaseFilter.PositiveNumber)
+    def bdw(self, wm_str, wm_amp):
         engine = self.context.modules.engine
+        engine.image = engine.image.convert('RGB')
         freq = np.fft.fft2(engine.image)
 
-        freq_wm = wm_freq(wm_str, freq)
+        freq_wm = wm_freq(wm_str, freq, wm_amp)
 
         back_from_freq = np.fft.ifft2(freq_wm)
         back_from_freq = np.real(back_from_freq)
