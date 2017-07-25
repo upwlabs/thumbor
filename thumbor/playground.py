@@ -14,10 +14,15 @@ def extract_wm(wm_path):
     wm_freq = np.fft.fft2(wm)
     diff = wm_freq - ori_freq
     diff = decode_wm(diff)
-    diff_im = arr2im(touint8(diff))
-    enhance_diff(diff_im, 1.8, 2.2)
-    diff_im.save('/Users/xinzhao/Desktop/extracted_wm.jpg', quality=100)
-    return diff_im
+    diff_im = arr2im(diff.astype(int))
+    # enhance_diff(diff_im, 1.8, 2.2)
+    res = Image.new('RGB', (ori.size[0]*2, ori.size[1]), (0, 0, 0))
+    res.paste(diff_im, (0, 0))
+
+    diff_im2 = arr2im(touint8(diff))
+    res.paste(diff_im2, (ori.size[0], 0))
+    res.save('/Users/xinzhao/Desktop/extracted_wm.bmp')
+    return res
 
 
 if __name__ == "__main__":

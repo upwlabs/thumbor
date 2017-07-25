@@ -44,7 +44,8 @@ class Filter(BaseFilter):
         freq2 = np.fft.fft2(back_from_freq_im)
         diff = freq2 - freq
         diff = decode_wm(diff)
-        diff_im = arr2im(touint8(diff))
+        # diff_im = arr2im(touint8(diff))
+        diff_im = arr2im(diff.astype(int))
         enhance_diff(diff_im, 1.8, 2.2)
         out.paste(im=diff_im, box=(bz[0], bz[1]))
 

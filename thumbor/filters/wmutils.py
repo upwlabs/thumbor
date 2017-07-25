@@ -24,14 +24,16 @@ def arr2im(data):
 def wm_freq(wm_str, freq, wm_amp):
     wm_im = gen_wm(wm_str)
     encoded_wm = encode_wm(np.array(wm_im))
-    return freq + encoded_wm / encoded_wm.max() * (wm_amp if wm_amp > 0 else 512)
+    return np.fft.ifftshift(
+        np.fft.fftshift(freq) +
+        encoded_wm / encoded_wm.max() * (wm_amp if wm_amp > 0 else 512))
 
 
 def gen_wm(wm_str):
     wm_im = Image.new('RGB', (W, H), (0, 0, 0))
     draw = ImageDraw.Draw(wm_im)
     font = ImageFont.truetype("Hack-Regular.ttf", 36)
-    for i, j in ((0, 0), (1, 3)):
+    for i, j in ((0, 0), (1, 3), ):
         # draw.text((j * 64 + 5, i * 64 + 5), wm_str[:len(wm_str) / 2], (255, 255, 255), font=font)
         # draw.text((j * 64 + 5, i * 64 + 32 + 5), wm_str[len(wm_str) / 2:], (255, 255, 255), font=font)
         draw.text((j * 64 + 5, i * 64 + 32 + 5), wm_str, (255, 255, 255), font=font)
@@ -51,6 +53,7 @@ def encode_wm(wm):
 
 
 def decode_wm(ewm):
+    ewm = np.fft.fftshift(ewm)
     x, y = range(H/2), range(W)
     random.seed(2569)
     random.shuffle(x)
