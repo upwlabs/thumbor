@@ -35,6 +35,9 @@ class ImagingHandler(ContextHandler):
         url = self.request.path
 
         kw['image'] = quote(kw['image'].encode('utf-8'))
+        if kw['image'].startswith('glsd/'):
+            kw['glsd'] = True
+            kw['image'] = kw['image'][5:]
         if not self.validate(kw['image']):
             self._error(400, 'No original image was specified in the given URL')
             return
@@ -83,6 +86,7 @@ class ImagingHandler(ContextHandler):
 
     @tornado.web.asynchronous
     def get(self, **kw):
+        print 'zx debug get kw', kw
         self.check_image(kw)
 
     @tornado.web.asynchronous

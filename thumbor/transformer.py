@@ -13,6 +13,7 @@ import sys
 
 from thumbor.point import FocalPoint
 from thumbor.utils import logger
+from thumbor.entropyutil import calc_im_entropy
 import tornado.gen as gen
 
 trim_enabled = True
@@ -95,6 +96,7 @@ class Transformer(object):
         self.engine.focus(self.focal_points)
 
     def transform(self, callback):
+        logger.debug('zx debug transform start')
         self.done_callback = callback
         if self.context.config.RESPECT_ORIENTATION:
             self.engine.reorientate()
@@ -133,6 +135,12 @@ class Transformer(object):
 
     def smart_detect(self):
         is_gifsicle = (self.context.request.engine.extension == '.gif' and self.context.config.USE_GIFSICLE_ENGINE)
+        logger.debug('zx debug smart_detect glsmart %s', self.context.request.glsmart)
+        logger.debug('zx debug smart_detect glsmart img: %s', self.engine.image.size)
+        if self.context.request.glsmart:
+            self.do_image_operations()
+            return
+            
         if (not (self.context.modules.detectors and self.context.request.smart)) or is_gifsicle:
             self.do_image_operations()
             return
@@ -229,6 +237,9 @@ class Transformer(object):
             operation=self.img_operation_worker,
             callback=inner
         )
+        
+    def glsmart(self):
+        pass
 
     def extract_cover(self):
         self.engine.extract_cover()

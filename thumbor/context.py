@@ -135,7 +135,8 @@ class RequestParameters:
                  hash=None,
                  accepts_webp=False,
                  request=None,
-                 max_age=None):
+                 max_age=None,
+                 glsd=False):
 
         self.debug = bool(debug)
         self.meta = bool(meta)
@@ -172,6 +173,7 @@ class RequestParameters:
         self.halign = halign or 'center'
         self.valign = valign or 'middle'
         self.smart = bool(smart)
+        self.glsmart = bool(glsd)
 
         if filters is None:
             filters = []
