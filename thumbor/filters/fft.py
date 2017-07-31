@@ -39,7 +39,7 @@ class Filter(BaseFilter):
         out.paste(im=back_from_freq_im, box=(bz[0], 0))
 
         # out.paste(im=arr2im(touint8(back_from_freq - engine.image)), box=(0, bz[1]))
-        out.paste(im=arr2im(touint8(decode_wm(freq_wm - freq))), box=(0, bz[1]))
+        out.paste(im=arr2im(abs(back_from_freq - np.array(engine.image)).astype(int)), box=(0, bz[1]))
 
         freq2 = np.fft.fft2(back_from_freq_im)
         diff = freq2 - freq
