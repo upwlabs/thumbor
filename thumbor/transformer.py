@@ -13,7 +13,7 @@ import sys
 
 from thumbor.point import FocalPoint
 from thumbor.utils import logger
-from thumbor.entropyutil import calc_im_entropy
+from thumbor.glsmartutil import glsmart_crop, LANCZOS 
 import tornado.gen as gen
 
 trim_enabled = True
@@ -138,6 +138,7 @@ class Transformer(object):
         logger.debug('zx debug smart_detect glsmart %s', self.context.request.glsmart)
         logger.debug('zx debug smart_detect glsmart img: %s', self.engine.image.size)
         if self.context.request.glsmart:
+            self.glsmart()
             self.do_image_operations()
             return
             
@@ -239,7 +240,14 @@ class Transformer(object):
         )
         
     def glsmart(self):
-        pass
+        w, h = self.engine.image.size
+        print 'zx debug glsmart, target_size %r %r' % (self.context.request.width, self.context.request.height)
+        resize_factor_w = w / float(self.context.request.width)
+        resize_factor_h = h / float(self.context.request.height)
+        resize_factor = min(resize_factor_w, resize_factor_h)
+        self.engine.image = self.engine.image.resize((int(w / resize_factor), int(h / resize_factor)),
+                                                     LANCZOS)
+        self.engine.image = glsmart_crop(self.engine.image)
 
     def extract_cover(self):
         self.engine.extract_cover()
