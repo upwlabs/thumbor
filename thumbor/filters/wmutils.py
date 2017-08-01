@@ -26,7 +26,7 @@ def wm_freq(wm_str, freq, wm_amp):
     encoded_wm = encode_wm(np.array(wm_im))
     return np.fft.ifftshift(
         np.fft.fftshift(freq) +
-        encoded_wm / encoded_wm.max() * (wm_amp if wm_amp > 0 else 512))
+        encoded_wm / encoded_wm.max() * (wm_amp if wm_amp > 0 else 512)), encoded_wm
 
 
 def gen_wm(wm_str):

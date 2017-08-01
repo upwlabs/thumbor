@@ -20,7 +20,7 @@ class Filter(BaseFilter):
         engine.image = engine.image.convert('RGB')
         freq = np.fft.fft2(engine.image)
 
-        freq_wm = wm_freq(wm_str, freq, wm_amp)
+        freq_wm, _ = wm_freq(wm_str, freq, wm_amp)
 
         back_from_freq = np.fft.ifft2(freq_wm)
         back_from_freq = np.real(back_from_freq)
